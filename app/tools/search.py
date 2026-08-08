@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+''' Find which files contain this code/text. '''
 def search_files(directory: str, query: str) -> list[str]:
     '''
         search for a text pattern inside files under a dictionary
@@ -32,4 +33,31 @@ def search_files(directory: str, query: str) -> list[str]:
             result.append(str(file))
 
     return result
-        
+
+
+
+''' Find where this filename exists '''
+def find_file(directory: str, filename: str) -> list[str]:
+    """
+    Find files with a specific filename inside a directory recursively.
+    """
+
+    root = Path(directory)
+
+    if not root.exists():
+        return ["Error: directory does not exist"]
+
+    if not root.is_dir():
+        return ["Error: path is not a directory"]
+
+    results = []
+
+    for file in root.rglob("*"):
+
+        if not file.is_file():
+            continue
+
+        if file.name.lower() == filename.lower():
+            results.append(str(file))
+
+    return results        
