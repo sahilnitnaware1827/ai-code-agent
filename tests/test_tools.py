@@ -1,6 +1,7 @@
 # test tool.py file 
 
-from app.tools import list_directory, read_file, search_file
+from app.tools.filesystem import list_directory, read_file
+from app.tools.search import search_files
 
 result = list_directory("workspace/sample_project")
 
@@ -12,4 +13,4 @@ print(read_file("workspace/sample_project/main.py"))
 
 
 print("\n\n Search Result >>> ")
-print(search_file("workspace/sample_project", "calculate_total"))
+print(search_files("workspace/sample_project", "calculate_total"))

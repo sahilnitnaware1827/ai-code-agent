@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-def search_file(directory: str, query: str) -> list[str]:
+def search_files(directory: str, query: str) -> list[str]:
     '''
         search for a text pattern inside files under a dictionary
     '''
