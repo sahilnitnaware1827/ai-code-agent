@@ -13,12 +13,15 @@ from app.tools.search import(
 
 from langchain_core.messages import ToolMessage, HumanMessage
 
+from app.tools.editor import edit_file
+
 
 tools = [
     list_directory,
     read_file,
     search_files,
-    find_file
+    find_file,
+    edit_file
 ]
 
 tool_registry = {
