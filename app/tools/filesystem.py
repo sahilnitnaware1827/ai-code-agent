@@ -1,7 +1,10 @@
 # to list directiry and read content from file 
 
 from pathlib import Path
+from langchain_core.tools import tool
 
+
+@tool
 def list_directory(path: str) -> list[str]:
     '''
         List files and directories inside the given path
@@ -19,6 +22,7 @@ def list_directory(path: str) -> list[str]:
 
 
 
+@tool
 def read_file(path: str) -> str:
     """
         Read and return content of a text file 

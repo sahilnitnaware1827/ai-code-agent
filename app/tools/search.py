@@ -1,8 +1,11 @@
 # to search the file 
 
 from pathlib import Path
+from langchain_core.tools import tool
+
 
 ''' Find which files contain this code/text. '''
+@tool
 def search_files(directory: str, query: str) -> list[str]:
     '''
         search for a text pattern inside files under a dictionary
@@ -36,7 +39,9 @@ def search_files(directory: str, query: str) -> list[str]:
 
 
 
+
 ''' Find where this filename exists '''
+@tool
 def find_file(directory: str, filename: str) -> list[str]:
     """
     Find files with a specific filename inside a directory recursively.
