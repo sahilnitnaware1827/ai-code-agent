@@ -4,6 +4,8 @@ from langchain_core.messages import AnyMessage
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
+from langgraph.types import interrupt
+from langgraph.checkpoint.memory import MemorySaver
 
 from app.agent import llm_with_tools, tools
 
@@ -11,6 +13,7 @@ from app.agent import llm_with_tools, tools
 class AgentState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
     iteration: int
+    approved: bool
 
 
 def call_model(state: AgentState):
@@ -41,12 +44,30 @@ def should_continue(state: AgentState):
     return END
 
 
+
+def approval_node(state: AgentState):
+
+    approval = interrupt(
+        {
+            "type": "file_edit_approval",
+            "message": "The agent wants to modify a file.",
+        }
+    )
+
+    return {
+        "approved": approval
+    }
+
+
+
 builder = StateGraph(AgentState)
 
 builder.add_node("agent", call_model)
 builder.add_node("tools", tool_node)
+builder.add_node("approval", approval_node)
 
 builder.add_edge(START, "agent")
+builder.add_edge("approval", "tools")
 
 builder.add_conditional_edges(
     "agent",
@@ -59,5 +80,8 @@ builder.add_conditional_edges(
 
 builder.add_edge("tools", "agent")
 
-graph = builder.compile()
+checkpointer = MemorySaver()
 
+graph = builder.compile(
+    checkpointer= checkpointer
+)
