@@ -10,6 +10,10 @@ from app.tools.search import(
     find_file
 )
 
+
+from langchain_core.messages import ToolMessage, HumanMessage
+
+
 tools = [
     list_directory,
     read_file,
@@ -17,4 +21,52 @@ tools = [
     find_file
 ]
 
+tool_registry = {
+    tool.name: tool for tool in tools
+}
+
 llm_with_tools = llm.bind_tools(tools)
+
+
+
+
+def execute_tool(tool_call):
+    tool_name = tool_call["name"]
+    tool_args = tool_call["args"]
+
+    tool = tool_registry.get(tool_name)
+
+    if tool is None:
+        return f" Error Unknown Tool '{tool_name}' "
+
+    return tool.invoke(tool_args)
+
+
+
+def run_agent(user_input: str):
+
+    messages = [
+        HumanMessage(content=user_input)
+    ]
+
+    response = llm_with_tools.invoke(messages)
+
+    if not response.tool_calls:
+        return response.content
+
+    messages.append(response) # type: ignore
+
+    for tool_call in response.tool_calls:
+
+        result = execute_tool(tool_call)
+
+        messages.append(
+            ToolMessage(
+                content=str(result),
+                tool_call_id=tool_call["id"]
+            ) # type: ignore
+        )
+
+    final_response = llm_with_tools.invoke(messages)
+
+    return final_response.content
