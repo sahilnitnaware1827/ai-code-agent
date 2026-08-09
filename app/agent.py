@@ -17,6 +17,8 @@ from app.tools.editor import edit_file
 
 from app.tools.executor import run_python
 
+from app.tools.sandbox import run_python_sandbox
+
 
 tools = [
     list_directory,
@@ -24,7 +26,8 @@ tools = [
     search_files,
     find_file,
     edit_file,
-    run_python
+    run_python,
+    run_python_sandbox
 ]
 
 tool_registry = {
