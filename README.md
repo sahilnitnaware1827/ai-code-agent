@@ -323,7 +323,7 @@ AI_Code_Agent/
 ### 1. Clone the repository
 
 ```bash
-git clone <your-github-repository-url>
+git clone https://github.com/sahilnitnaware1827/ai-code-agent
 cd AI_Code_Agent
 ```
 
