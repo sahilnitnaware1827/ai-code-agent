@@ -35,7 +35,7 @@ result = graph.invoke(
         "iteration": 0,
         "approved": False,
         "edit_request": None,
-    },
+    }, # type: ignore
     config=config, # type: ignore
 )
 

@@ -37,8 +37,8 @@ print("=" * 60)
 
 
 result = graph.invoke(
-    state,
-    config=config,
+    state, # type: ignore
+    config=config, # type: ignore
 )
 
 
@@ -70,7 +70,7 @@ result = graph.invoke(
     Command(
         resume=approved
     ),
-    config=config,
+    config=config, # type: ignore
 )
 
 

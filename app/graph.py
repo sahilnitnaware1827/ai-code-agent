@@ -57,10 +57,10 @@ def should_continue(state: AgentState):
 
     last_message = state["messages"][-1]
 
-    if not last_message.tool_calls:
+    if not last_message.tool_calls: # type: ignore
         return END
 
-    for tool_call in last_message.tool_calls:
+    for tool_call in last_message.tool_calls: # type: ignore
 
         if tool_call["name"] == "edit_file":
 
@@ -96,7 +96,7 @@ def approval_node(state: AgentState):
 
         tool_call = None
 
-        for call in last_message.tool_calls:
+        for call in last_message.tool_calls: # type: ignore
 
             if call["name"] == "edit_file":
 
