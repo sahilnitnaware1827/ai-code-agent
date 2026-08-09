@@ -43,30 +43,32 @@ def execute_tool(tool_call):
 
 
 
-def run_agent(user_input: str):
+
+
+def run_agent(user_input: str, max_iterations: int = 10):
 
     messages = [
         HumanMessage(content=user_input)
     ]
 
-    response = llm_with_tools.invoke(messages)
+    for _ in range(max_iterations):
 
-    if not response.tool_calls:
-        return response.content
+        response = llm_with_tools.invoke(messages)
 
-    messages.append(response) # type: ignore
+        messages.append(response) # type: ignore
 
-    for tool_call in response.tool_calls:
+        if not response.tool_calls:
+            return response.content
 
-        result = execute_tool(tool_call)
+        for tool_call in response.tool_calls:
 
-        messages.append(
-            ToolMessage(
-                content=str(result),
-                tool_call_id=tool_call["id"]
-            ) # type: ignore
-        )
+            result = execute_tool(tool_call)
 
-    final_response = llm_with_tools.invoke(messages)
+            messages.append(
+                ToolMessage(
+                    content=str(result),
+                    tool_call_id=tool_call["id"]
+                ) # type: ignore
+            )
 
-    return final_response.content
+    return "Agent stopped because the maximum number of iterations was reached."
