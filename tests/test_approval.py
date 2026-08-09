@@ -14,7 +14,7 @@ def approval_node(state):
     }
 
 
-builder = StateGraph(dict)
+builder = StateGraph(dict) # type: ignore
 
 builder.add_node("approval", approval_node)
 

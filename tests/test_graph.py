@@ -1,24 +1,83 @@
 from langchain_core.messages import HumanMessage
+from langgraph.types import Command
 
 from app.graph import graph
 
 
-result = graph.invoke({
-    "messages": [
-        HumanMessage(
-            content=(
-                "Inspect workspace/sample_project/bug.py, "
-                "fix the bug, run it, and verify the result."
+config = {
+    "configurable": {
+        "thread_id": "test-edit-approval-1"
+    }
+}
+
+
+print("=" * 60)
+print("AI CODE AGENT - EDIT APPROVAL TEST")
+print("=" * 60)
+
+
+# --------------------------------------------------
+# 1. Start the agent
+# --------------------------------------------------
+
+result = graph.invoke(
+    {
+        "messages": [
+            HumanMessage(
+                content=(
+                    "Fix the bug in "
+                    "workspace/sample_project/bug.py. "
+                    "Inspect the file first, identify the problem, "
+                    "and propose the required edit."
+                )
             )
-        )
-    ],
-    "iteration": 0,
-})
+        ],
+        "iteration": 0,
+        "approved": False,
+        "edit_request": None,
+    },
+    config=config, # type: ignore
+)
 
 
-print("Final answer:")
-print(result["messages"][-1].content)
+# --------------------------------------------------
+# 2. Check whether graph is waiting for approval
+# --------------------------------------------------
 
-print("\nIterations:")
-print(result["iteration"])
+if "__interrupt__" in result:
 
+    print("\n" + "=" * 60)
+    print("APPROVAL REQUIRED")
+    print("=" * 60)
+
+    interrupt_data = result["__interrupt__"]
+
+    print(interrupt_data)
+
+    decision = input(
+        "\nApprove this edit? (y/n): "
+    ).strip().lower()
+
+    approved = decision == "y"
+
+    # --------------------------------------------------
+    # 3. Resume graph
+    # --------------------------------------------------
+
+    result = graph.invoke(
+        Command(
+            resume=approved
+        ),
+        config=config, # type: ignore
+    )
+
+
+# --------------------------------------------------
+# 4. Final result
+# --------------------------------------------------
+
+print("\n" + "=" * 60)
+print("FINAL RESULT")
+print("=" * 60)
+
+print(result)
