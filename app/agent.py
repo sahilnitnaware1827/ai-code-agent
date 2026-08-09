@@ -15,13 +15,16 @@ from langchain_core.messages import ToolMessage, HumanMessage
 
 from app.tools.editor import edit_file
 
+from app.tools.executor import run_python
+
 
 tools = [
     list_directory,
     read_file,
     search_files,
     find_file,
-    edit_file
+    edit_file,
+    run_python
 ]
 
 tool_registry = {
