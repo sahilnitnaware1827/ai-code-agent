@@ -1,5 +1,4 @@
-def calculate_total(a, b):
-    return a + b
+from utils import calculate_total
 
 
 result = calculate_total(10, 20)
