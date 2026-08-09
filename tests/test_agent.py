@@ -2,8 +2,11 @@ from app.agent import run_agent
 
 
 response = run_agent(
-    "Find main.py inside workspace/sample_project, "
-    "read it, and tell me what functions it contains."
+    """
+    Inspect workspace/sample_project/bug.py.
+    Find the bug, fix it, run the program,
+    and verify that it works.
+    """
 )
 
 print("AI:", response)

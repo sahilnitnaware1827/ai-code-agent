@@ -51,18 +51,22 @@ def execute_tool(tool_call):
 
 
 
+from langchain_core.messages import HumanMessage, ToolMessage
+
+
 def run_agent(user_input: str, max_iterations: int = 10):
 
     messages = [
         HumanMessage(content=user_input)
     ]
 
-    for _ in range(max_iterations):
+    for iteration in range(max_iterations):
 
         response = llm_with_tools.invoke(messages)
 
         messages.append(response) # type: ignore
 
+        # Gemini finished
         if not response.tool_calls:
             return response.content
 
@@ -77,4 +81,4 @@ def run_agent(user_input: str, max_iterations: int = 10):
                 ) # type: ignore
             )
 
-    return "Agent stopped because the maximum number of iterations was reached."
+    return "Agent stopped: maximum iteration limit reached."

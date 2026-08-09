@@ -1,5 +1,5 @@
 def calculate_total(a, b):
-    return a + c
+    return a + b
 
 
 result = calculate_total(10, 20)
